@@ -3,7 +3,7 @@ namespace Trophy\Application;
 
 use Trophy\Config\Config;
 use Trophy\Database\Database;
-use Trophy\Utils\NoCSRF;
+use NoCSRF;
 use Trophy\Validation\Validator;
 use Trophy\Validation\Duplicate;
 

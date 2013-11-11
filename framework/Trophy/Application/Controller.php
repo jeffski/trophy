@@ -4,7 +4,7 @@ namespace Trophy\Application;
 use Trophy\Controller\BaseController;
 use Trophy\Utils\Template;
 use Trophy\Export\Export;
-use Trophy\Utils\NoCSRF;
+use NoCSRF;
 use Trophy\Utils\Login;
 
 class Controller extends BaseController

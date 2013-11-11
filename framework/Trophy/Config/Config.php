@@ -34,7 +34,7 @@ class Config
 
     public function parse()
     {
-        require( $_SERVER["DOCUMENT_ROOT"] . "/" . APP_PATH . "/config/" . $this->config_file );
+        require( $_SERVER["DOCUMENT_ROOT"] . "/app/" . $this->config_file );
 
         foreach( $config as $key => $val ) {
            $this->items[ $key ] = $val;

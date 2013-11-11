@@ -15,6 +15,9 @@ Abstract Class BaseController {
      * All controllers must contain an index method
      */
     abstract function index();
+    abstract function enter();
+    abstract function terms();
+    abstract function privacy();
 }
 
 ?>
