@@ -1,0 +1,11 @@
+{
+    "name": "trophy/framework",
+    "description": "Core framework for Trophy competition applications",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Jeff Shillitto",
+            "email": "jeff@shillitto.com"
+        }
+    ]
+}
