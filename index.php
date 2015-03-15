@@ -1,18 +1,17 @@
 <?php
-//use Trophy\Loader\SplClassLoader;
 use Trophy\Controller\FrontController;
 
-const APP_PATH = "/";
+/**
+ * Application Path
+ *
+ * Change this when deploying the application in a sub directory.
+ * Enter the subdirectory name with a forward slash - i.e. "/subdir"
+ */
+define('APP_PATH', "");
 
-$path = realpath('.');
-
-define('ROOT', $path);
+define('ROOT', realpath('.'));
 
 require ROOT . '/vendor/autoload.php';
-
-//require_once __DIR__ . "/framework/Trophy/Loader/SplClassLoader.php";
-//$autoloader = new SplClassLoader('Trophy', 'framework');
-//$autoloader->register();
 
 $frontController = new FrontController();
 $frontController->run();

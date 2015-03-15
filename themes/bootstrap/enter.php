@@ -12,7 +12,7 @@
                     </div>
                 <?php endif; ?>
 
-                <form role="form" id="enter" name="enter" method="post" action="/enter">
+                <form role="form" id="enter" name="enter" method="post" action="<?php echo APP_PATH; ?>/enter">
                     
                     <div class="form-group">
                         <label for="first_name">First Name</label>
@@ -62,7 +62,7 @@
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" id="terms" name="terms" value="1" <?php echo isset($_POST['terms']) ? 'checked' : ''; ?> /> 
-                            I have read and agree to the <a href="/terms">Terms And Conditions</a> and the <a href="/privacy">Privacy Policy</a>.
+                            I have read and agree to the <a href="<?php echo APP_PATH; ?>/terms">Terms And Conditions</a> and the <a href="<?php echo APP_PATH; ?>/privacy">Privacy Policy</a>.
                         </label>                
                     </div>
                     

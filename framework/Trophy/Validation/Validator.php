@@ -1,7 +1,7 @@
 <?php
 namespace Trophy\Validation;
 
-use Trophy\Validation\GUMP;
+use \GUMP;
 
 class Validator extends GUMP
 {

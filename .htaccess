@@ -1,4 +1,8 @@
 RewriteEngine on
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1
+
+# For authentication when using PHP/CGI
+RewriteRule .* - [E=HTTP_PHP_AUTH:%{HTTP:Authorization},L]

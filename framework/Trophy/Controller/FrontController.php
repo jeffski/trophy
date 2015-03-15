@@ -1,5 +1,5 @@
 <?php
-// Controller has been hard coded in to application JS - 2013-09-24
+// Controller has been hard coded in to application
 namespace Trophy\Controller;
 
 use Trophy\Application;
@@ -14,11 +14,11 @@ class FrontController implements IFrontController
     protected $params        = array();
     protected $basePath      = APP_PATH;
 
-    public function __construct(array $options = array()) {
+    public function __construct(array $options = array())
+    {
         if (empty($options)) {
             $this->parseUri();
-        }
-        else {
+        } else {
             if (isset($options["controller"])) {
                 $this->setController($options["controller"]);
             }
@@ -31,16 +31,20 @@ class FrontController implements IFrontController
         }
     }
 
-    protected function parseUri() {
+    protected function parseUri()
+    {
         $path = trim(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH), "/");
+
         $path = preg_replace('/[^a-zA-Z0-9]\//', "", $path);
-        if (strpos($path, $this->basePath) === 0) {
+
+        if (!empty($this->basePath) && strpos("/" . $path, $this->basePath) === 0) {
             $path = substr($path, strlen($this->basePath));
         }
+
         @list($action, $params) = explode("/", $path, 2);
+
         // Controller is hard coded
-/*
-        if (!empty($controller)) {
+        /*if (!empty($controller)) {
             $this->setController($controller);
         }*/
 
@@ -52,35 +56,41 @@ class FrontController implements IFrontController
         }
     }
 
-     // Controller is hard coded - deprecate
-    public function setController($controller) {
+    // Controller is hard coded - deprecate
+    public function setController($controller)
+    {
         $controller = ucfirst(strtolower($controller)) . "Controller";
 
         if (!class_exists('\\Trophy\\Application\\Controller')) {
             throw new \InvalidArgumentException(
-                "The action controller '$controller' has not been defined.");
+                "The action controller '$controller' has not been defined."
+            );
         }
         $this->controller = $controller;
         return $this;
     }
 
-    public function setAction($action) {
+    public function setAction($action)
+    {
         $class = "\\Trophy\\Application\\Controller";
         $reflector = new \ReflectionClass($class);
         if (!$reflector->hasMethod($action)) {
             throw new \InvalidArgumentException(
-                "The controller action '$action' has been not defined.");
+                "The controller action '$action' has been not defined."
+            );
         }
         $this->action = $action;
         return $this;
     }
 
-    public function setParams(array $params) {
+    public function setParams(array $params)
+    {
         $this->params = $params;
         return $this;
     }
 
-    public function run() {
+    public function run()
+    {
         $class = "\\Trophy\\Application\\Controller";
 
         $refMethod = new \ReflectionMethod($class, $this->action);

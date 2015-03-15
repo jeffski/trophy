@@ -7,12 +7,17 @@ use NoCSRF;
 use Trophy\Validation\Validator;
 use Trophy\Validation\Duplicate;
 
-class Form {
+/**
+ * Class Form
+ * @package Trophy\Application
+ */
+class Form
+{
 
     protected $config;
     protected $validationRules;
 
-    function __construct()
+    public function __construct()
     {
         $this->config = Config::getConfig();
     }
@@ -21,26 +26,29 @@ class Form {
      * Save Form
      * Process the form input and save to database
      *
-     * @param array $data
-     * @param string $table
-     * @param array $exclude_fields
+     * @param array $data   Form post
+     *
      * @return array
      */
-    function save($data, $table, $exclude_fields)
+    public function save($data)
     {
         $errorMessages = array();
 
         // CSRF Check
         try {
-            NoCSRF::check( 'csrf_token', $_POST, true, 60*10, false );
-        } catch ( \Exception $e ) {
+            NoCSRF::check('csrf_token', $_POST, true, 60 * 10, false);
+        } catch (\Exception $e) {
             array_push($errorMessages, $e->getMessage());
         }
 
         // Check for duplicates
         if ($this->config->check_duplicates) {
             $duplicate = new Duplicate;
-            $duplicates = $duplicate->check($this->config->duplicates_fields, $this->config->duplicates_entries, $this->config->duplicates_delay);
+            $duplicates = $duplicate->check(
+                $this->config->duplicates_fields,
+                $this->config->duplicates_entries,
+                $this->config->duplicates_delay
+            );
 
             if ($duplicates) {
                 array_push($errorMessages, $this->config->duplicates_msg);
@@ -87,9 +95,9 @@ class Form {
 
 
     // TODO: Move to Export class - should not be here
-    function export()
+    public function export()
     {
-        $db = Database::getDB($this->config); 
+        $db = Database::getDB($this->config);
         $sql = "SELECT " . $this->config->db_columns . " FROM " . $this->config->db_table;
         return $db->read($sql);
     }
@@ -97,7 +105,7 @@ class Form {
     // TODO: Move to Export class - should not be here
     public function fields()
     {
-        $db = Database::getDB($this->config); 
+        $db = Database::getDB($this->config);
         $sql = "SELECT " . $this->config->db_columns . " FROM " . $this->config->db_table;
         return $db->fields($sql);
     }
@@ -110,61 +118,20 @@ class Form {
      */
     // TODO: Repeated code - move to Database or Util class
     // Repeated in Validator
-    private function escape($input) {
+    private function escape($input)
+    {
         $value = $input;
         //$value = trim($this->_xxs_cleanup($input));
 
-        if(get_magic_quotes_gpc()) {
-            $value = stripslashes( $value );
+        if (get_magic_quotes_gpc()) {
+            $value = stripslashes($value);
         }
         //check if this function exists
-        if(function_exists("mysql_real_escape_string")) {
+        if (function_exists("mysql_real_escape_string")) {
             $value = mysql_real_escape_string($value);
-        }
-        //for PHP version < 4.3.0 use addslashes
-        else {
+        } else { //for PHP version < 4.3.0 use addslashes
             $value = addslashes($value);
         }
         return $value;
     }
-
-    // TODO: Repeated code - move to Database or Util class
-    // TODO: Deprectaed by GUMP
-    // Repeated in Validator
-/*    private function _xxs_cleanup($text)
-    {
-        $text = preg_replace(
-            array(
-                // Remove invisible content
-                '@<head[^>]*?>.*?</head>@siu',
-                '@<style[^>]*?>.*?</style>@siu',
-                '@<script[^>]*?.*?</script>@siu',
-                '@<object[^>]*?.*?</object>@siu',
-                '@<embed[^>]*?.*?</embed>@siu',
-                '@<applet[^>]*?.*?</applet>@siu',
-                '@<noframes[^>]*?.*?</noframes>@siu',
-                '@<noscript[^>]*?.*?</noscript>@siu',
-                '@<noembed[^>]*?.*?</noembed>@siu',
-                // Add line breaks before and after blocks
-                '@</?((address)|(blockquote)|(center)|(del))@iu',
-                '@</?((div)|(h[1-9])|(ins)|(isindex)|(p)|(pre))@iu',
-                '@</?((dir)|(dl)|(dt)|(dd)|(li)|(menu)|(ol)|(ul))@iu',
-                '@</?((table)|(th)|(td)|(caption))@iu',
-                '@</?((form)|(button)|(fieldset)|(legend)|(input))@iu',
-                '@</?((label)|(select)|(optgroup)|(option)|(textarea))@iu',
-                '@</?((frameset)|(frame)|(iframe))@iu',
-            ),
-            array(
-                ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                "\n\$0", "\n\$0", "\n\$0", "\n\$0", "\n\$0", "\n\$0",
-                "\n\$0", "\n\$0",
-            ),
-            $text );
-
-        $text = strip_tags($text);
-        $_Ary_TagsList = array('jav&#x0A;ascript:', 'jav&#x0D;ascript:', 'jav&#x09;ascript:', '<!-', '<', '>', '%3C', '&lt', '&lt;', '&LT', '&LT;', '&#60', '&#060', '&#0060', '&#00060', '&#000060', '&#0000060', '&#60;', '&#060;', '&#0060;', '&#00060;', '&#000060;', '&#0000060;', '&#x3c', '&#x03c', '&#x003c', '&#x0003c', '&#x00003c', '&#x000003c', '&#x3c;', '&#x03c;', '&#x003c;', '&#x0003c;', '&#x00003c;', '&#x000003c;', '&#X3c', '&#X03c', '&#X003c', '&#X0003c', '&#X00003c', '&#X000003c', '&#X3c;', '&#X03c;', '&#X003c;', '&#X0003c;', '&#X00003c;', '&#X000003c;', '&#x3C', '&#x03C', '&#x003C', '&#x0003C', '&#x00003C', '&#x000003C', '&#x3C;', '&#x03C;', '&#x003C;', '&#x0003C;', '&#x00003C;', '&#x000003C;', '&#X3C', '&#X03C', '&#X003C', '&#X0003C', '&#X00003C', '&#X000003C', '&#X3C;', '&#X03C;', '&#X003C;', '&#X0003C;', '&#X00003C;', '&#X000003C;', '\x3c', '\x3C', '\u003c', '\u003C', chr(60), chr(62));
-        $text = @str_replace($_Ary_TagsList, '', $text);
-
-        return((string)$text);
-    }*/
 }

@@ -1,7 +1,7 @@
 <?php 
 namespace Trophy\Export;
 
-interface IExport 
+interface IExport
 {
     public function export($fields, $data);
 }

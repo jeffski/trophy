@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "bkcore/nocsrf": "dev-master"
+        "bkcore/nocsrf": "dev-master",
+        "wixel/gump": "dev-master"
     },
     "autoload": {
         "psr-0": {

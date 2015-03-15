@@ -7,6 +7,11 @@ use Trophy\Export\Export;
 use NoCSRF;
 use Trophy\Utils\Login;
 
+/**
+ * Main Controller
+ *
+ * Includes the core screens needed for a contest
+ */
 class Controller extends BaseController
 {
     protected $template;
@@ -21,40 +26,39 @@ class Controller extends BaseController
     /**
      * Default home/landing page
      * Will output page based on config setting (splash, closed or enter)
-     */ 
-    function index()
+     */
+    public function index()
     {
-        $this->template->set_var('title', $this->config->title);
-        $this->template->set_var('token', NoCSRF::generate('csrf_token'));
+        $this->template->setVar('title', $this->config->title);
+        $this->template->setVar('token', NoCSRF::generate('csrf_token'));
         $html = $this->template->process($this->config->theme, $this->config->index);
         $this->template->output($html);
     }
 
     /**
      * Enter/Form page
+     *
+     * @param array $messages
      */
-    function enter($messages = array())
+    public function enter($messages = array())
     {
         $template = 'enter';
-        $this->template->set_var('title', $this->config->title);
+        $this->template->setVar('title', $this->config->title);
 
-        if($_SERVER['REQUEST_METHOD'] == "POST") {
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $form = new Form;
-            $response = $form->save($_POST, $this->config->db_table, $this->config->form_exclude_fields);
-    
-            if(!empty($response))
-            {
-                $this->template->set_var('token', NoCSRF::generate('csrf_token'));
-                $this->template->set_var('messages', $response);
-            }
-            else
-            {
+            $response = $form->save($_POST);
+
+            if (!empty($response)) {
+                $this->template->setVar('token', NoCSRF::generate('csrf_token'));
+                $this->template->setVar('messages', $response);
+            } else {
                 $template = 'thanks';
             }
         } else {
-            $this->template->set_var('token', NoCSRF::generate('csrf_token'));
+            $this->template->setVar('token', NoCSRF::generate('csrf_token'));
         }
-        
+
         $html = $html = $this->template->process($this->config->theme, $template);
         $this->template->output($html);
     }
@@ -62,29 +66,30 @@ class Controller extends BaseController
     /**
      * Terms and Conditions Page
      */
-    function terms()
+    public function terms()
     {
         // TODO: Add title to config for standard pages
-        $this->template->set_var('title', $this->config->title);
+        $this->template->setVar('title', $this->config->title);
         $html = $this->template->process($this->config->theme, 'terms');
-        $this->template->output($html); 
+        $this->template->output($html);
     }
 
     /**
      * Privacy Page
      */
-    function privacy()
+    public function privacy()
     {
-        $this->template->set_var('title', $this->config->title);
+        $this->template->setVar('title', $this->config->title);
         $html = $this->template->process($this->config->theme, 'privacy');
-        $this->template->output($html); 
+        $this->template->output($html);
     }
 
     /**
-     * Secure CSV Download page
-     * @param string $format Out put to screen or CSV download
+     * CSV Download page
+     *
+     * @param string $format    Output to screen or CSV download
      */
-    function secure($format = 'Csv')
+    public function export($format = 'CSV')
     {
         // HTTP Authentication
         $login = new Login;
@@ -97,17 +102,14 @@ class Controller extends BaseController
 
         // Get the format object and print out the result
         $export = new Export;
-        $formatObject = $export->getObject('Format' . ucfirst($format)); 
+        $formatObject = $export->getObject('Format' . ucfirst($format));
 
-        if(!empty($formatObject))
-        {
+        if (!empty($formatObject)) {
             $formatObject->export($fields, $data);
         }
     }
 
-
     /* -----------------------------------------------------------
      * Add any custom pages/controller actions/methods below
      * ----------------------------------------------------------- */
-
 }

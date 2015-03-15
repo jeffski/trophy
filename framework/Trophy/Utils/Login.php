@@ -4,12 +4,12 @@ namespace Trophy\Utils;
 
 use Trophy\Config\Config;
 
-class Login 
+class Login
 {
     private $username;
     private $password;
 
-    function __construct()
+    public function __construct()
     {
         $config = Config::getConfig();
         $this->username = $config->login_username;
@@ -21,22 +21,23 @@ class Login
      *
      * Show the HTTP Login Form and check the username and password based on config file
      */
-    public function authenticate() {
-        $login_successful = FALSE;
+    public function authenticate()
+    {
+        $login_successful = false;
 
-        if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) 
-        {
+        list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) =
+            explode(':', base64_decode(substr($_SERVER['HTTP_PHP_AUTH'], 6)));
+
+        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             $username = $_SERVER['PHP_AUTH_USER'];
             $password = $_SERVER['PHP_AUTH_PW'];
 
-            if($this->_checkCredentials($username, $password))
-            {
-                $login_successful = TRUE;
+            if ($this->checkCredentials($username, $password)) {
+                $login_successful = true;
             }
-        } 
+        }
 
-        if(!$login_successful)
-        {
+        if (!$login_successful) {
             header('HTTP/1.0 401 Unauthorized');
             header('HTTP/1.1 401 Unauthorized');
             header('WWW-Authenticate: Basic realm="Secure Login"');
@@ -53,12 +54,11 @@ class Login
      * @param string $password
      * @return bool 
      */
-    private function _checkCredentials($username, $password)
+    private function checkCredentials($username, $password)
     {
-        if($this->username == $username && $this->password == $password)
-        {
-            return TRUE;
+        if ($this->username == $username && $this->password == $password) {
+            return true;
         }
-        return FALSE;
+        return false;
     }
 }

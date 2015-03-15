@@ -2,7 +2,6 @@
 /**
  * Config Class
  * Set and Get various config settings
- * @author: Jeff Shillitto
  */
 
 namespace Trophy\Config;
@@ -25,8 +24,7 @@ class Config
 
     public static function getConfig()
     {
-        if(!self::$instance)
-        {
+        if (!self::$instance) {
             self::$instance = new self;
         }
         return self::$instance;
@@ -34,10 +32,10 @@ class Config
 
     public function parse()
     {
-        require( $_SERVER["DOCUMENT_ROOT"] . "/app/" . $this->config_file );
+        require($_SERVER["DOCUMENT_ROOT"] . "/" . APP_PATH . "/app/" . $this->config_file);
 
-        foreach( $config as $key => $val ) {
-           $this->items[ $key ] = $val;
+        foreach ($config as $key => $val) {
+            $this->items[$key] = $val;
         }
     }
 }

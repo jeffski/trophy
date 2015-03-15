@@ -3,21 +3,20 @@ namespace Trophy\Controller;
 
 use Trophy\Config\Config;
 
-Abstract Class BaseController {
-
+abstract class BaseController
+{
     protected $config;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->config = Config::getConfig();
     }
 
     /**
      * All controllers must contain an index method
      */
-    abstract function index();
-    abstract function enter();
-    abstract function terms();
-    abstract function privacy();
+    abstract public function index();
+    abstract public function enter();
+    abstract public function terms();
+    abstract public function privacy();
 }
-
-?>

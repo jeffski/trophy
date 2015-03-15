@@ -3,7 +3,7 @@ namespace Trophy\Export;
 
 use Trophy\Config\Config;
 
-class FormatCSV implements IExport 
+class FormatCSV implements IExport
 {
     private $delimeter;
     private $newline;
@@ -39,10 +39,9 @@ class FormatCSV implements IExport
         $fields_name = implode($fields, $this->enclose . $this->delimeter . $this->enclose);
         echo $this->enclose . $fields_name . $this->enclose . $this->newline;
 
-        foreach($data as $value)
-        {
+        foreach ($data as $value) {
             $row = implode($value, $this->enclose . $this->delimeter . $this->enclose);
             echo $this->enclose . $row . $this->enclose . $this->newline;
         }
-    } 
+    }
 }

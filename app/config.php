@@ -129,4 +129,3 @@ $config['csv_newline'] = "\r\n";
 
 // Character to enclose fields, can be left blank or use \" or \'. creates values like "Jeff", "Shillitto", ...
 $config['csv_enclose'] = "\"";
-?>

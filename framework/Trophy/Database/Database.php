@@ -1,19 +1,17 @@
 <?php
 namespace Trophy\Database;
 
-class Database {
+class Database
+{
 
     private static $instance; //store the single instance of the database
 
     private function __construct($config)
     {
-        if($config->domain == $_SERVER['SERVER_NAME'] || substr(strstr($config->domain, '.'),1) == $_SERVER['SERVER_NAME'])
-        {
+        if ($config->domain == $_SERVER['SERVER_NAME'] || substr(strstr($config->domain, '.'), 1) == $_SERVER['SERVER_NAME']) {
             $connection = mysql_connect($config->dbhost_live, $config->dbuser_live, $config->dbpass_live) or die (mysql_error());
             $database = $config->dbname_live;
-        }
-        else
-        {
+        } else {
             $connection = mysql_connect($config->dbhost_local, $config->dbuser_local, $config->dbpass_local) or die (mysql_error());
             $database = $config->dbname_local;
         }
@@ -28,10 +26,10 @@ class Database {
      */
     public static function getDB($config)
     {
-        if(!self::$instance)
-        {
+        if (!self::$instance) {
             self::$instance = new Database($config);
         }
+
         return self::$instance;
     }
 
@@ -40,9 +38,10 @@ class Database {
      * 
      * Run an SQL Query against the database
      */
-    public function query($query) 
+    public function query($query)
     {
         $sql = mysql_query($query) or die(mysql_error());
+
         return $sql;
     }
 
@@ -52,6 +51,7 @@ class Database {
      * Get the data from the table and return as array 
      *
      * @param string $query
+     *
      * @return array
      */
     public function read($query)
@@ -59,14 +59,13 @@ class Database {
         $data = array();
         $resource = $this->query($query);
 
-        while($row = mysql_fetch_array($resource, MYSQL_ASSOC)) 
-        {
-            foreach($row as $key => $value)
-            {
+        while ($row = mysql_fetch_array($resource, MYSQL_ASSOC)) {
+            foreach ($row as $key => $value) {
                 $temp[$key] = $value;
             }
             array_push($data, $temp);
         }
+
         return $data;
     }
 
@@ -76,6 +75,7 @@ class Database {
      * Return the list of fields as array
      *
      * @param string $query
+     *
      * @return array
      */
     public function fields($query)
@@ -83,14 +83,13 @@ class Database {
         $fields = array();
         $resource = $this->query($query);
         $index = 0;
-        
-        while($index < mysql_num_fields($resource))
-        {
+
+        while ($index < mysql_num_fields($resource)) {
             $field = mysql_fetch_field($resource, $index);
             array_push($fields, $field->name);
             $index++;
         }
+
         return $fields;
     }
-
 }
